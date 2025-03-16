@@ -1,0 +1,22 @@
+/* custom-ckeditor.css */
+.ck-editor__editable {
+    @apply p-4 border border-gray-300 rounded-lg;
+}
+
+.ck-content h1,
+.ck-content h2,
+.ck-content h3 {
+    @apply text-2xl font-bold mb-4;
+}
+
+.ck-content ul {
+    @apply list-disc pl-5;
+}
+
+.ck-content ol {
+    @apply list-decimal pl-5;
+}
+
+.ck-content li {
+    @apply text-gray-700 mb-2;
+}
