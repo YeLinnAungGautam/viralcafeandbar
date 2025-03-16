@@ -250,7 +250,7 @@ const menuGroups = ref([
         <div class="flex items-center justify-between gap-2 px-6 pt-2 pb-0">
             <a href="/">
                 <img
-                    src="@/assets/image/logo.png"
+                    src="@/assets/image/logo.jpg"
                     class="w-1/2 m-auto"
                     alt=""
                 />

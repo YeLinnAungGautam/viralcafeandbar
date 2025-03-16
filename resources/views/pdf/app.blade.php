@@ -121,7 +121,7 @@
 <body>
     <header>
         <div class="main">
-            <img src="{{ public_path('logo.png') }}" class="logo" alt="Khin Collection">
+            <img src="{{ public_path('logo.jpg') }}" class="logo" alt="Khin Collection">
         </div>
     </header>
     <main>
