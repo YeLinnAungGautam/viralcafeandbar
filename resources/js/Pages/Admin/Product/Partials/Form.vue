@@ -16,7 +16,9 @@
                             :value="tab.code"
                         >
                             {{ tab.name }}
-                            {{ tab.is_default == 1 ? "(Default)" : "(Optional)" }}
+                            {{
+                                tab.is_default == 1 ? "(Default)" : "(Optional)"
+                            }}
                         </Tab>
                     </TabList>
                     <TabPanels>
@@ -42,7 +44,7 @@
                                 />
                                 <InputError :message="form.errors.name" />
                             </div>
-                            <div class="mb-5">
+                            <!-- <div class="mb-5">
                                 <InputLabel value="Description (Optional)" />
                                 <Editor
                                     @handleInput="
@@ -53,7 +55,7 @@
                                     "
                                     v-model="form.translates[index].description"
                                 />
-                            </div>
+                            </div> -->
                             <div class="flex space-x-3 items-center mb-3">
                                 <ToggleSwitch
                                     id="has"
@@ -97,33 +99,31 @@
                                                         >
                                                         </InputText>
                                                     </InputGroup>
-                                                    <button>
-                                                        <button
-                                                            :disabled="
-                                                                form.translates[
-                                                                    index
-                                                                ].additionals
-                                                                    .length <= 1
-                                                            "
-                                                            @click.prevent="
-                                                                handleRemoveAdditional(
-                                                                    key
-                                                                )
-                                                            "
-                                                            class="w-8 h-8 bg-slate-200 inline-flex justify-center items-center rounded-full"
-                                                            :class="
-                                                                form.translates[
-                                                                    index
-                                                                ].additionals
-                                                                    .length <= 1
-                                                                    ? 'opacity-50'
-                                                                    : ''
-                                                            "
-                                                        >
-                                                            <i
-                                                                class="fa-solid fa-trash-alt text-sm"
-                                                            ></i>
-                                                        </button>
+                                                    <button
+                                                        :disabled="
+                                                            form.translates[
+                                                                index
+                                                            ].additionals
+                                                                .length <= 1
+                                                        "
+                                                        @click.prevent="
+                                                            handleRemoveAdditional(
+                                                                key
+                                                            )
+                                                        "
+                                                        class="w-8 h-8 bg-slate-200 inline-flex justify-center items-center rounded-full"
+                                                        :class="
+                                                            form.translates[
+                                                                index
+                                                            ].additionals
+                                                                .length <= 1
+                                                                ? 'opacity-50'
+                                                                : ''
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="fa-solid fa-trash-alt text-sm"
+                                                        ></i>
                                                     </button>
                                                 </div>
                                                 <InputError
@@ -478,7 +478,7 @@ import AttributeOptionForm from "@/Pages/Admin/AttributeOption/Partials/Form.vue
 import Message from "primevue/message";
 import UploadFile from "@/Components/UploadFIle.vue";
 import ConfirmDialog from "primevue/confirmdialog";
-import Editor from "@/Components/Editor.vue";
+// import Editor from "@/Components/Editor.vue";
 import InputGroup from "primevue/inputgroup";
 import InputGroupAddon from "primevue/inputgroupaddon";
 import MultiSelect from "primevue/multiselect";
