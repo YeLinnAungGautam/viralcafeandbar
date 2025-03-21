@@ -3,54 +3,79 @@
         <BreadcrumbDefault page-title="Create Orders" />
         <div class="grid grid-cols-3 gap-4">
             <div class="col-span-2">
-                <div class="mb-4">
-                    <InputText
-                        placeholder="Search by name"
-                        class="w-1/2"
-                        @input.prevent="handleSearchProduct"
-                    />
+                <div class="mb-4 flex gap-x-3">
+                    <div class="w-1/2">
+                        <InputText
+                            placeholder="Search by name"
+                            class="w-full"
+                            @input.prevent="handleSearchProduct"
+                            v-model="payload.keyword"
+                        />
+                    </div>
+                    <div class="w-1/2">
+                        <Select
+                            @change="handleSearchProduct"
+                            v-model="payload.category_id"
+                            :options="categories"
+                            optionLabel="name"
+                            optionValue="id"
+                            class="w-full text-[16px]"
+                            placeholder="Select a category"
+                        />
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-3 gap-5">
-                    <div
-                        v-for="product in products.data"
-                        :key="product.id"
-                        class="card border bg-white border-slate-200 rounded-lg shadow flex flex-col"
-                    >
-                        <img
-                            :src="product.upload[0]?.url"
-                            :alt="product.name"
-                            class="w-full h-52 object-cover"
-                        />
-                        <div class="p-4">
-                            <h3 class="font-bold text-[15px] mb-2 truncate">
-                                {{ product.name }}
-                            </h3>
-                            <div>
-                                <template
-                                    v-for="category in product.categories"
-                                    :key="category.id"
+                    <template v-if="products.data.length != 0">
+                        <div
+                            v-for="product in products.data"
+                            :key="product.id"
+                            class="card border bg-white border-slate-200 rounded-lg shadow flex flex-col"
+                        >
+                            <img
+                                :src="product.upload[0]?.url"
+                                :alt="product.name"
+                                class="w-full h-52 object-cover"
+                            />
+                            <div class="p-4">
+                                <h3 class="font-bold text-[15px] mb-2 truncate">
+                                    {{ product.name }}
+                                </h3>
+                                <div>
+                                    <template
+                                        v-for="category in product.categories"
+                                        :key="category.id"
+                                    >
+                                        <Tag :value="category.name"></Tag>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="mt-auto p-4">
+                                <div
+                                    class="flex justify-between items-center w-full"
                                 >
-                                    <Tag :value="category.name"></Tag>
-                                </template>
+                                    <Button
+                                        :disabled="product.total_stock == 0"
+                                        label="Add to cart"
+                                        severity="contrast"
+                                        class="w-full"
+                                        @click="handleAddToCart(product)"
+                                    />
+                                </div>
                             </div>
                         </div>
-                        <div class="mt-auto p-4">
-                            <div
-                                class="flex justify-between items-center w-full"
-                            >
-                                <Button
-                                    :disabled="product.total_stock == 0"
-                                    label="Add to cart"
-                                    severity="contrast"
-                                    class="w-full"
-                                    @click="handleAddToCart(product)"
-                                />
-                            </div>
+                        <div class="col-span-full">
+                            <Pagination :links="products.links" :state="true" />
                         </div>
-                    </div>
+                    </template>
+                    <template v-else>
+                        <div
+                            class="text-center border col-span-full bg-white border-slate-300 mb-5 p-6 rounded-md"
+                        >
+                            <h3 class="text-base">No record</h3>
+                        </div>
+                    </template>
                 </div>
-                <Pagination :links="products.links" :state="true" />
             </div>
             <div class="col-span-1">
                 <div class="sticky top-20">
@@ -239,13 +264,13 @@
         >
             <form @submit.prevent="handleCheckout" class="m-0">
                 <Fieldset legend="Customer Infromation">
-                    <div class="mb-5 w-full">
+                    <!-- <div class="mb-5 w-full">
                         <InputLabel for="name" value="Choose customer" />
                         <CustomerAutocomplete
                             url="/api/v1/customer-search"
                             v-model="customer"
                         />
-                    </div>
+                    </div> -->
                     <div class="flex gap-x-4">
                         <div class="mb-3 w-full">
                             <InputLabel for="fname" value="First Name" />
@@ -255,13 +280,12 @@
                                 type="text"
                                 v-model="form.customer.first_name"
                                 autocomplete="off"
-                                :disabled="!form.customer.id"
                             />
                             <InputError
                                 :message="form.errors['customer.first_name']"
                             />
                         </div>
-                        <div class="mb-3 w-full">
+                        <!-- <div class="mb-3 w-full">
                             <InputLabel for="lname" value="Last Name" />
                             <InputText
                                 id="lname"
@@ -269,12 +293,11 @@
                                 type="text"
                                 v-model="form.customer.last_name"
                                 autocomplete="off"
-                                :disabled="!form.customer.id"
                             />
                             <InputError
                                 :message="form.errors['customer.last_name']"
                             />
-                        </div>
+                        </div> -->
                     </div>
                     <div class="flex gap-x-4">
                         <div class="mb-3 w-full">
@@ -285,13 +308,12 @@
                                 type="email"
                                 v-model="form.customer.email"
                                 autocomplete="off"
-                                :disabled="!form.customer.id"
                             />
                             <InputError
                                 :message="form.errors['customer.email']"
                             />
                         </div>
-                        <div class="mb-3 w-full">
+                        <!-- <div class="mb-3 w-full">
                             <InputLabel for="phone" value="Phone" />
                             <InputText
                                 id="phone"
@@ -299,14 +321,13 @@
                                 type="text"
                                 v-model="form.customer.phone"
                                 autocomplete="off"
-                                :disabled="!form.customer.id"
                             />
                             <InputError
                                 :message="form.errors['customer.phone']"
                             />
-                        </div>
+                        </div> -->
                     </div>
-                    <div class="flex gap-x-4">
+                    <!-- <div class="flex gap-x-4">
                         <div class="mb-3 w-full">
                             <InputLabel for="address" value="Address" />
                             <Textarea
@@ -317,7 +338,6 @@
                                 type="text"
                                 v-model="form.customer.address"
                                 autocomplete="off"
-                                :disabled="!form.customer.id"
                             />
                             <InputError
                                 :message="form.errors['customer.address']"
@@ -331,13 +351,12 @@
                                 type="text"
                                 v-model="form.customer.country"
                                 autocomplete="off"
-                                :disabled="!form.customer.id"
                             />
                             <InputError
                                 :message="form.errors['customer.country']"
                             />
                         </div>
-                    </div>
+                    </div> -->
                 </Fieldset>
                 <Fieldset legend="Order">
                     <div class="mb-4">
@@ -390,7 +409,7 @@
 
 <script setup>
 import { router, useForm } from "@inertiajs/vue3";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import Dialog from "primevue/dialog";
 import { useToast } from "primevue/usetoast";
 import { useConfirm } from "primevue/useconfirm";
@@ -404,18 +423,26 @@ import moment from "moment";
 import axios from "axios";
 import currencyFormat from "@/composables/useCurrencyFormat";
 import CustomerAutocomplete from "@/Components/Autocomplete/Item.vue";
-
+import Select from "primevue/select";
 const visible = ref(false);
 
 const props = defineProps({
     products: Object,
     payment_methods: Array,
+    categories: Array,
 });
 
 const toast = useToast();
 const confirm = useConfirm();
 const customer = ref();
 const customers = ref();
+
+const { params } = route();
+
+const payload = reactive({
+    keyword: params.keyword || "",
+    category_id: params.category_id || "",
+});
 
 const payment_status = ref([
     {
@@ -599,17 +626,11 @@ const handleRemove = (index) => {
 };
 
 const handleSearchProduct = _.debounce((event) => {
-    router.get(
-        route("admin.orders.create"),
-        {
-            keyword: event.target.value,
-        },
-        {
-            preserveState: true,
-            preserveScroll: true,
-            only: ["products"],
-        }
-    );
+    router.get(route("admin.orders.create"), payload, {
+        preserveState: true,
+        preserveScroll: true,
+        only: ["products"],
+    });
 }, 500);
 
 const handleCheckout = () => {
@@ -639,7 +660,7 @@ const handleCheckout = () => {
 onMounted(async () => {
     var result = await axios("/api/v1/customer-search");
     customers.value = await result.data.data;
-    console.log(customers.value);
+    // console.log(customers.value);
 });
 
 watch(customer, (value) => {

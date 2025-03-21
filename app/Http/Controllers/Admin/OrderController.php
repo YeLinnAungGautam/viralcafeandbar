@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Class\Customer\CustomerQuery;
 use App\Exports\OrderBookingExport;
 use App\Http\Requests\Api\OrderStoreRequest;
+use App\Models\Category;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use Exception;
@@ -81,10 +82,20 @@ class OrderController extends Controller
 
         $payments = Payment::active()->get();
 
-        $products = $products->withFilterByName()->withCategories()->withTotalStock()->withSkus()->paginate(12);
+        $products = $products
+            ->withFilterByName()
+            ->withFilterByCategoryId()
+            ->withCategories()
+            ->withTotalStock()
+            ->withSkus()
+            ->paginate(12);
+
+        $categories = Category::latest('id')->get();
+
 
         return Inertia::render('Admin/Order/Create', [
             'products'        => $products,
+            'categories'      => $categories,
             'customers'       => $customers,
             'payment_methods' => $payments,
         ]);
@@ -92,7 +103,7 @@ class OrderController extends Controller
 
     public function store(OrderStoreRequest $request)
     {
-        $this->orderService->authId = $request->customer['id'];
+        // $this->orderService->authId = $request->customer['id'];
         $this->orderService->store($request);
 
         return to_route('admin.orders.index');
