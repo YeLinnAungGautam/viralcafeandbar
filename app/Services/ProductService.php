@@ -311,7 +311,6 @@ class ProductService
             $sku->update([
                 'code'                => $request['code'],
                 'stock'               => $request['stock'],
-                'stock_status'        => $request['stock_status'],
                 'weight'              => $request['weight'],
                 'original_price'      => $request['price'],
                 'sale_price'          => $request['sale_price'],
@@ -331,6 +330,14 @@ class ProductService
                     }
                 }
             }
+
+            $skuTotal = $sku['stock'];
+
+            $sku->refresh();
+
+            $sku->update([
+                'stock_status' => $skuTotal != 0 ? 'in_stock' : $request['stock_status'],
+            ]);
 
             $order = $request['upload'];
 
