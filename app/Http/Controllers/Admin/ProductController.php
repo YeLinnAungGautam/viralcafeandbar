@@ -56,8 +56,11 @@ class ProductController extends Controller
 
     public function store(StoreProductRequest $request)
     {
-        $this->productService->store($request);
-
+        try {
+            $this->productService->store($request);
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors('error', $e->getMessage());
+        }
         return to_route('admin.products.index');
     }
 
