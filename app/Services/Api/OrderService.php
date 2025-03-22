@@ -322,7 +322,7 @@ class OrderService
                 'status'        => $status,
             ]);
 
-            $customer->notify(new PointTransaction($title, $body, $translates));
+            // $customer->notify(new PointTransaction($title, $body, $translates));
 
             $tokens = $customer->fcmToken->pluck('token')->toArray();
 
@@ -330,9 +330,9 @@ class OrderService
 
             $data = collect($notification)->except('translates')->toArray();
 
-            foreach ($tokens as $key => $value) {
-                (new FcmNotifyService)->sendWithDeviceToken($value, $title, $body, $data);
-            }
+            // foreach ($tokens as $key => $value) {
+            //     (new FcmNotifyService)->sendWithDeviceToken($value, $title, $body, $data);
+            // }
         endif;
     }
 
@@ -344,15 +344,15 @@ class OrderService
 
         $translates = TranslateHelper::getOrderMessage($order);
 
-        $customer->notify(new OrderShip($order, $translates));
+        // $customer->notify(new OrderShip($order, $translates));
 
         $notification = $customer->notifications()->latest()->value('data');
 
         $data = collect($notification)->except('translates')->toArray();
 
-        foreach ($tokens as $key => $value) {
-            (new FcmNotifyService)->sendWithDeviceToken($value, $translates['en']['title'], $translates['en']['body'], $data);
-        }
+        // foreach ($tokens as $key => $value) {
+        //     (new FcmNotifyService)->sendWithDeviceToken($value, $translates['en']['title'], $translates['en']['body'], $data);
+        // }
 
         if (!is_null($order->orderCustomer->email)) {
             OrderMailJob::dispatch($order->orderCustomer, $order);
