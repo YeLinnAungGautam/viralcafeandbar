@@ -635,7 +635,7 @@ const handleSearchProduct = _.debounce((event) => {
 
 const handleCheckout = () => {
     const options = {
-        onSuccess: () => {
+        onSuccess: (response) => {
             toast.add({
                 severity: "success",
                 summary: "Success",
@@ -643,6 +643,14 @@ const handleCheckout = () => {
                 life: 3000,
             });
             form.reset();
+        },
+        onError: (response) => {
+            toast.add({
+                severity: "error",
+                summary: "Error",
+                detail: response.error,
+                life: 3000,
+            });
         },
     };
     onFormSubmit(options, null);

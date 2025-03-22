@@ -25,7 +25,9 @@ class ProductController extends Controller
 {
     use MediaUploadingTrait;
 
-    public function __construct(public ProductService $productService) {}
+    public function __construct(public ProductService $productService)
+    {
+    }
 
     public function index(Request $request)
     {
@@ -54,7 +56,7 @@ class ProductController extends Controller
 
     public function store(StoreProductRequest $request)
     {
-        $product =   $this->productService->store($request);
+        $this->productService->store($request);
 
         return to_route('admin.products.index');
     }

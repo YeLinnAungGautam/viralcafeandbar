@@ -103,8 +103,14 @@ class OrderController extends Controller
 
     public function store(OrderStoreRequest $request)
     {
-        // $this->orderService->authId = $request->customer['id'];
-        $this->orderService->store($request);
+        try {
+            // $this->orderService->authId = $request->customer['id'];
+            $this->orderService->store($request);
+        } catch (\Throwable $th) {
+            return redirect()->back()->withErrors([
+                'error' => $th->getMessage(),
+            ]);
+        }
 
         return to_route('admin.orders.index');
     }
