@@ -99,7 +99,7 @@
 <body>
     <section class="container">
         <header class="banner-logo">
-            <img class="logo" src="https://kc.myanmarcafe.trade/logo.jpg" alt="KC">
+            <img class="logo" src="{{ asset('logo.jpg') }}" />
         </header>
         @yield('content')
     </section>

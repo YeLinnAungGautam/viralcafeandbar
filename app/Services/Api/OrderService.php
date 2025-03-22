@@ -247,13 +247,14 @@ class OrderService
         OrderCustomer::create([
             'order_id'    => $order->id,
             'first_name'  => $request->customer['first_name'],
-            'last_name'   => $request->customer['last_name'],
+            'last_name'   => $request->customer['last_name'] ?? "XXX",
             'customer_id' => $order->customer_id ?? null,
-            'email'       => $request->customer['email'] ?? $user->email,
-            'phone'       => $request->customer['phone'] ?? $user->phone,
-            'address'     => $request->customer['address'],
-            'country'     => $request->customer['country'],
+            'email'       => $request->customer['email'] ?? null,
+            'phone'       => $request->customer['phone'] ?? null,
+            'address'     => $request->customer['address'] ?? null,
+            'country'     => $request->customer['country'] ?? null,
         ]);
+
         $this->saveMeta($request->meta, $user);
     }
 

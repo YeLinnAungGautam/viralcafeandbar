@@ -23,11 +23,11 @@ class OrderStoreRequest extends FormRequest
     {
         $rules = [
             'customer.first_name' => 'required',
-            'customer.last_name'  => 'required',
+            'customer.last_name'  => 'nullable',
             'customer.email'      => 'nullable|required_without:customer.phone|email',
             'customer.phone'      => 'nullable|required_without:customer.email',
-            'customer.address'    => 'required',
-            'customer.country'    => 'required',
+            'customer.address'    => 'nullable',
+            'customer.country'    => 'nullable',
             'items'               => 'required|array',
             'items.*.product_id'  => 'required|exists:products,id|numeric',
             'items.*.sku_id'      => 'required|exists:skus,id|numeric',
