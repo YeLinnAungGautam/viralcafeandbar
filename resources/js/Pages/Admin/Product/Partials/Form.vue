@@ -415,7 +415,6 @@
         :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
         @close="sku = null"
     >
-        <!-- :item="sku" -->
         <PricingForm
             :index="indexKey"
             :item="form.skus[indexKey]"
@@ -464,7 +463,6 @@
 </template>
 
 <script setup>
-// import Editor from "primevue/editor";
 import Tabs from "primevue/tabs";
 import TabList from "primevue/tablist";
 import Tab from "primevue/tab";
@@ -478,7 +476,6 @@ import AttributeOptionForm from "@/Pages/Admin/AttributeOption/Partials/Form.vue
 import Message from "primevue/message";
 import UploadFile from "@/Components/UploadFIle.vue";
 import ConfirmDialog from "primevue/confirmdialog";
-// import Editor from "@/Components/Editor.vue";
 import InputGroup from "primevue/inputgroup";
 import InputGroupAddon from "primevue/inputgroupaddon";
 import MultiSelect from "primevue/multiselect";
@@ -500,12 +497,6 @@ import ToggleSwitch from "primevue/toggleswitch";
 const confirm = useConfirm();
 const toast = useToast();
 const page = usePage();
-
-const datas = ref([
-    { id: 1, name: "Item 1" },
-    { id: 2, name: "Item 2" },
-    { id: 3, name: "Item 3" },
-]);
 
 const props = defineProps({
     editValue: {
@@ -572,7 +563,7 @@ const items = ref([
         ],
     },
 ]);
-
+const selectedAttributeOptions = ref([]);
 const form = useForm({
     name: "",
     type: "simple",
@@ -592,6 +583,7 @@ const form = useForm({
             code: null,
             price: null,
             sale_price: null,
+            expense: null,
             stock: null,
             stock_status: "in_stock",
             weight: null,
@@ -631,6 +623,7 @@ const handleGenerate = async () => {
                 code: null,
                 price: null,
                 sale_price: null,
+                expense: null,
                 stock: null,
                 stock_status: "in_stock",
                 weight: null,
@@ -647,8 +640,6 @@ const handleGenerate = async () => {
         }
     }
 };
-
-const selectedAttributeOptions = ref([]);
 
 const handleAddNew = async () => {
     const result = await axios(route("admin.attribute-options.selectd"), {
@@ -669,6 +660,7 @@ const pushSkuData = () => {
         code: null,
         price: null,
         sale_price: null,
+        expense: null,
         stock: null,
         stock_status: "in_stock",
         weight: null,
@@ -796,70 +788,6 @@ const handleChangeType = (event) => {
     }
 };
 
-onMounted(async () => {
-    if (props.editValue) {
-        form.name = props.editValue.name;
-        form.description = props.editValue.description;
-        form.active = props.editValue.active;
-        form.type = props.editValue.type;
-        form.category = props.editValue.categories.map((item) => item.id);
-        form.upload = props.editValue.upload ?? [];
-        form.product_status =
-            props.editValue.product_status == "arrival" ? true : false;
-        form.has_additional = props.editValue.has_additional;
-
-        if (props.editValue.video) {
-            form.image_link.url = props.editValue.video.image_link
-                ? props.editValue.video.image_link
-                : [];
-
-            form.video_link.url = props.editValue.video.video_link
-                ? props.editValue.video.video_link
-                : [];
-        }
-
-        if (props.editValue.type != "simple") {
-            form.attribute_id = props.editValue.attributes.map(
-                (item) => item.id
-            );
-
-            await handleGenerate();
-        }
-
-        for (let index = 0; index < props.editValue.skus.length; index++) {
-            const sku = props.editValue.skus[index];
-            form.skus[index].id = sku?.id ?? null;
-            form.skus[index].code = sku?.code ?? "";
-            form.skus[index].stock = sku.stock;
-            form.skus[index].stock_status = sku.stock_status;
-            form.skus[index].weight = sku.weight;
-            form.skus[index].price = sku.original_price;
-            form.skus[index].sale_price = sku.sale_price;
-            form.skus[index].discount_schedule = sku.discount_schedule;
-            form.skus[index].discount_start_date = sku.discount_start_date;
-            form.skus[index].discount_end_date = sku.discount_end_date;
-            form.skus[index].upload = sku.upload;
-        }
-
-        form.skus = form.skus.filter((item) => item.id);
-
-        Object.keys(props.editValue.translates).forEach((key, index) => {
-            const language = props.editValue.translates[key];
-            for (const property in language) {
-                form.translates[index].name = language.name;
-                form.translates[index].description = language.description
-                    ? language.description
-                    : "";
-                form.translates[index].label = language.code;
-                form.translates[index].language_id = language.language_id;
-                if (language.additionals) {
-                    form.translates[index].additionals = language.additionals;
-                }
-            }
-        });
-    }
-});
-
 var { languages } = page.props;
 
 const handleAddLanguages = () => {
@@ -908,6 +836,119 @@ const handleInputChange = (item, value) => {
 const toggle = (event) => {
     menu.value.toggle(event);
 };
+
+const initialStage = async () => {
+    const { editValue } = props;
+
+    Object.assign(form, {
+        name: editValue.name,
+        description: editValue.description,
+        active: editValue.active,
+        type: editValue.type,
+        category: editValue.categories.map((item) => item.id),
+        upload: editValue.upload ?? [],
+        product_status: editValue.product_status == "arrival" ? true : false,
+        has_additional: editValue.has_additional,
+    });
+
+    // form.name = props.editValue.name;
+    // form.description = props.editValue.description;
+    // form.active = props.editValue.active;
+    // form.type = props.editValue.type;
+    // form.category = props.editValue.categories.map((item) => item.id);
+    // form.upload = props.editValue.upload ?? [];
+    // form.product_status =
+    //     props.editValue.product_status == "arrival" ? true : false;
+    // form.has_additional = props.editValue.has_additional;
+
+    if (editValue.video) {
+        Object.assign(form, {
+            image_link: editValue.video.image_link
+                ? editValue.video.image_link
+                : [],
+            video_link: editValue.video.video_link
+                ? editValue.video.video_link
+                : [],
+        });
+    }
+
+    if (editValue.type != "simple") {
+        form.attribute_id = editValue.attributes.map((item) => item.id);
+
+        await handleGenerate();
+    }
+
+    for (let index = 0; index < editValue.skus.length; index++) {
+        const sku = editValue.skus[index];
+
+        if (!form.skus[index]) {
+            form.skus[index] = {};
+        }
+
+        Object.assign(form.skus[index], {
+            id: sku.id || null,
+            code: sku.code || "",
+            stock: sku.stock,
+            stock_status: sku.stock_status,
+            weight: sku.weight,
+            price: sku.original_price,
+            sale_price: sku.sale_price,
+            expense: sku.expense,
+            discount_schedule: sku.discount_schedule,
+            discount_start_date: sku.discount_start_date,
+            discount_end_date: sku.discount_end_date,
+            upload: sku.upload,
+        });
+
+        // form.skus[index].id = sku?.id ?? null;
+        // form.skus[index].code = sku?.code ?? "";
+        // form.skus[index].stock = sku.stock;
+        // form.skus[index].stock_status = sku.stock_status;
+        // form.skus[index].weight = sku.weight;
+        // form.skus[index].price = sku.original_price;
+        // form.skus[index].sale_price = sku.sale_price;
+        // form.skus[index].expense = sku.expense;
+        // form.skus[index].discount_schedule = sku.discount_schedule;
+        // form.skus[index].discount_start_date = sku.discount_start_date;
+        // form.skus[index].discount_end_date = sku.discount_end_date;
+        // form.skus[index].upload = sku.upload;
+    }
+
+    form.skus = form.skus.filter((item) => item.id);
+
+    Object.keys(editValue.translates).forEach((key, index) => {
+        const language = editValue.translates[key];
+
+        if (!form.translates[index]) {
+            form.translates[index] = {};
+        }
+
+        for (const property in language) {
+            // form.translates[index].name = language.name;
+            // form.translates[index].description = language.description
+            //     ? language.description
+            //     : "";
+            // form.translates[index].label = language.code;
+            // form.translates[index].language_id = language.language_id;
+            // if (language.additionals) {
+            //     form.translates[index].additionals = language.additionals;
+            // }
+            Object.assign(form.translates[index], {
+                name: language.name,
+                description: language.description ? language.description : "",
+                label: language.code,
+                language_id: language.language_id,
+                additionals: language.additionals,
+            });
+        }
+    });
+};
+
+onMounted(async () => {
+    if (props.editValue) {
+        await initialStage();
+    }
+});
 </script>
 
 <style lang="css" scoped>

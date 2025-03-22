@@ -123,14 +123,14 @@ class ProductService
             $videoLinkFile = null;
 
 
-            if ($request->input('image_link')) {
+            if ($request->hasFile('image_link')) {
                 $file          = $request->input('image_link');
                 $imageLinkFile = basename($file[0]);
                 $tmpPath       = storage_path('tmp/uploads/' . $imageLinkFile);
-                Storage::putFileAs('public/images', new File($tmpPath), $imageLinkFile);
+                Storage::putFileAs('public/images/', new File($tmpPath), $imageLinkFile);
             }
 
-            if ($request->input('video_link')) {
+            if ($request->hasFile('video_link')) {
                 $file          = $request->input('video_link');
                 $videoLinkFile = basename($file[0]);
                 $tmpPath       = storage_path('tmp/uploads/' . $videoLinkFile);
@@ -212,7 +212,7 @@ class ProductService
             $videoLinkFile = $product->video ? $product->video->video_link : null;
 
             // Delete and update image_link if a new one is provided
-            if ($request->input('image_link')) {
+            if ($request->hasFile('image_link')) {
                 if ($imageLinkFile && Storage::exists('public/images/' . $imageLinkFile)) {
                     Storage::delete('public/images/' . $imageLinkFile);
                 }
@@ -223,7 +223,7 @@ class ProductService
                 Storage::putFileAs('public/images', new File($tmpPath), $imageLinkFile);
             }
 
-            if ($request->input('video_link')) {
+            if ($request->hasFile('video_link')) {
 
                 if ($videoLinkFile && Storage::exists('public/videos/' . $videoLinkFile)) {
                     Storage::delete('public/videos/' . $videoLinkFile);
@@ -314,6 +314,7 @@ class ProductService
                 'weight'              => $request['weight'],
                 'original_price'      => $request['price'],
                 'sale_price'          => $request['sale_price'],
+                'expense'             => $request['expense'],
                 'discount_type'       => $request['sale_price'] ? 'percent' : null,
                 'discount'            => $request['sale_price'] ? round((($request['price'] - $request['sale_price']) / $request['price']) * 100, 2) : null,
                 'discount_schedule'   => $request['discount_schedule'],

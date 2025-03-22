@@ -19,11 +19,10 @@
         >
             <Column header="Image">
                 <template #body="{ data }">
-                    <!-- <img :src="data.upload?.at(-1)?.thumbnail" alt="" /> -->
                     <Image
                         :src="data.upload?.at(-1)?.url"
-                        width="50"
-                        :preview="data.upload?.at(-1)?.url"
+                        class="w-[50px] h-[50px] object-cover"
+                        :preview="data.upload.at(-1)?.thumbnail ? true : false"
                     />
                 </template>
             </Column>
@@ -34,11 +33,15 @@
                         class="action-link cursor-pointer hover:underline hover:underline-offset-2"
                     >
                         <i class="fa-solid fa-eye"></i>
-
                         {{ data.name }}
                     </Link>
-                </template></Column
-            >
+                </template>
+            </Column>
+            <Column field="expense" header="Name" sortable>
+                <!-- <template #body="{ data }">
+                    {{ data.skus.expense }}
+                </template> -->
+            </Column>
             <Column field="original_price" header="Price" sortable>
                 <template #body="{ data }">
                     <span
@@ -59,12 +62,12 @@
                     </small>
                 </template>
             </Column>
-            <Column field="stock" header="Total Stock" class="w-20" sortable>
+            <Column field="stock" header=" Stock" class="w-20" sortable>
                 <template #body="{ data }">
                     {{ data.total_stock ?? "Unlimit" }}
                 </template>
             </Column>
-            <Column header="Product Status">
+            <Column header=" Status">
                 <template #body="{ data }">
                     <Tag
                         class="capitalize text-nowrap"
@@ -147,43 +150,6 @@ import useSortingTable from "@/composables/useSortingTable";
 const { onSort, sortOrder, sortField } = useSortingTable(
     route("admin.products.index")
 );
-
-// const sortOrder = ref();
-// const sortField = ref();
-
-// const onSort = (data) => {
-//     switch (data.sortField) {
-//         case "product_name":
-//             sortField.value = "name";
-//             break;
-//         case "regular_price":
-//             sortField.value = "min_original_price";
-//             break;
-//         default:
-//             sortField.value = null;
-//             break;
-//     }
-//     switch (data.sortOrder) {
-//         case 1:
-//             sortOrder.value = "asc";
-//             break;
-//         case -1:
-//             sortOrder.value = "desc";
-//             break;
-//         default:
-//             sortOrder.value = null;
-//             break;
-//     }
-//     router.get(
-//         route("admin.products.index"),
-//         { sortOrder: sortOrder.value, sortField: sortField.value },
-//         {
-//             preserveState: true,
-//             preserveScroll: true,
-//             only: ["products"],
-//         }
-//     );
-// };
 </script>
 
 <style lang="css" scoped></style>

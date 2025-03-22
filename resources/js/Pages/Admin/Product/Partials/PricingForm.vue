@@ -25,6 +25,18 @@
                 :message="errors['skus.' + index + '.stock'] ?? errors.stock"
             />
         </div>
+        <div class="mb-5">
+            <InputLabel for="expense" value="Expense" />
+            <InputText
+                id="expense"
+                class="w-full"
+                type="number"
+                v-model="sku.expense"
+            />
+            <InputError
+                :message="errors['skus.' + index + '.expense'] ?? errors.stock"
+            />
+        </div>
         <!-- <div class="mb-5">
             <InputLabel for="stock_status" value="Stock status" />
             <PSelect
@@ -180,6 +192,7 @@ const sku = ref({
     code: null,
     price: null,
     sale_price: null,
+    expense: null,
     stock: null,
     stock_status: null,
     weight: null,

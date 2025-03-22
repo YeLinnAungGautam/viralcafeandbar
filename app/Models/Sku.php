@@ -32,13 +32,14 @@ class Sku extends Model implements HasMedia
         'discount_type',
         'original_price',
         'sale_price',
+        'expense',
     ];
 
     protected $casts = [
         'original_price'    => 'float',
         'sale_price'        => 'float',
-        // 'discount'          => 'integer',
         'discount_schedule' => 'boolean',
+        'expense'           => 'float',
     ];
 
     protected $appends = [
