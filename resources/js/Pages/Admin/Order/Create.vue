@@ -441,7 +441,7 @@ const { params } = route();
 
 const payload = reactive({
     keyword: params.keyword || "",
-    category_id: params.category_id || "",
+    category_id: Number(params.category_id) || "",
 });
 
 const payment_status = ref([
@@ -656,19 +656,9 @@ const handleCheckout = () => {
     onFormSubmit(options, null);
 };
 
-// const handleFilterCustomer = _.debounce(async (event) => {
-//     var result = await axios("/api/v1/customer-search", {
-//         params: {
-//             keyword: event.value,
-//         },
-//     });
-//     customers.value = await result.data.data;
-// }, 500);
-
 onMounted(async () => {
     var result = await axios("/api/v1/customer-search");
     customers.value = await result.data.data;
-    // console.log(customers.value);
 });
 
 watch(customer, (value) => {
