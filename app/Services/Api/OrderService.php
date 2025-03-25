@@ -109,7 +109,7 @@ class OrderService
                 }
             }
 
-            $this->_savePoint($order, $oldOrder);
+            // $this->_savePoint($order, $oldOrder);
 
             $order->load('orderCustomer');
 
