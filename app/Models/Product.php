@@ -23,15 +23,15 @@ class Product extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, SoftDeletes;
 
-    protected $fillable = ['name', 'description', 'type', 'active', 'product_status', 'additionals', 'has_additional'];
+    protected $fillable = ['name', 'description', 'type', 'active', 'product_status', 'additionals', 'has_additional', 'total_expense'];
 
     const PRODUCT_TYPE = [
-        'simple' => 'simple',
+        'simple'    => 'simple',
         'vairation' => 'vairation',
     ];
 
     const PRODUCT_STATUS = [
-        'arrival' => 'arrival',
+        'arrival'  => 'arrival',
         'featured' => 'featured',
     ];
 
@@ -40,8 +40,9 @@ class Product extends Model implements HasMedia
     protected $appends = ['upload'];
 
     protected $casts = [
-        'additionals' => JsonDecode::class,
+        'additionals'    => JsonDecode::class,
         'has_additional' => 'boolean',
+        'total_expense'  => 'float',
     ];
 
     public function registerMediaConversions(?Media $media = null): void

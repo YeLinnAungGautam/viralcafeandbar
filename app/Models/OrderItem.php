@@ -9,7 +9,20 @@ class OrderItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id', 'sku_id', 'product_name', 'sku_name', 'order_id', 'qty', 'unit_price', 'discount_amount', 'total_price', 'tax_price'];
+    protected $fillable = [
+        'product_id',
+        'sku_id',
+        'product_name',
+        'sku_name',
+        'order_id',
+        'qty',
+        'unit_price',
+        'discount_amount',
+        'total_price',
+        'tax_price',
+        'total_expense',
+        'unit_expense',
+    ];
 
     protected $casts = [
         'unit_price'      => 'float',
