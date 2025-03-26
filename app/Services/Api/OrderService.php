@@ -63,7 +63,7 @@ class OrderService
             $order->load('orderCustomer');
 
             // if ($request->email) {
-            $this->_sendNotification($order);
+            // $this->_sendNotification($order);
             // }
 
             return $order;
@@ -115,7 +115,7 @@ class OrderService
 
             DB::commit();
 
-            $this->_sendNotification($order);
+            // $this->_sendNotification($order);
 
             return $order;
         } catch (Exception $e) {
@@ -326,9 +326,9 @@ class OrderService
 
             // $tokens = $customer->fcmToken->pluck('token')->toArray();
 
-            $notification = $customer->notifications()->latest()->value('data');
+            // $notification = $customer->notifications()->latest()->value('data');
 
-            $data = collect($notification)->except('translates')->toArray();
+            // $data = collect($notification)->except('translates')->toArray();
 
             // foreach ($tokens as $key => $value) {
             //     (new FcmNotifyService)->sendWithDeviceToken($value, $title, $body, $data);
@@ -339,20 +339,20 @@ class OrderService
     private function _sendNotification(Order $order, $type = 'orders'): void
     {
         $customer = Customer::find($order->customer_id);
-        // $tokens   = $customer->fcmToken->pluck('token')->toArray();
+        $tokens   = $customer->fcmToken->pluck('token')->toArray();
         $order    = Order::with('payment')->findOrFail($order->id);
 
         $translates = TranslateHelper::getOrderMessage($order);
 
-        // $customer->notify(new OrderShip($order, $translates));
+        $customer->notify(new OrderShip($order, $translates));
 
         $notification = $customer->notifications()->latest()->value('data');
 
         $data = collect($notification)->except('translates')->toArray();
 
-        // foreach ($tokens as $key => $value) {
-        //     (new FcmNotifyService)->sendWithDeviceToken($value, $translates['en']['title'], $translates['en']['body'], $data);
-        // }
+        foreach ($tokens as $key => $value) {
+            (new FcmNotifyService)->sendWithDeviceToken($value, $translates['en']['title'], $translates['en']['body'], $data);
+        }
 
         if (!is_null($order->orderCustomer->email)) {
             OrderMailJob::dispatch($order->orderCustomer, $order);
