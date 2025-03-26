@@ -259,7 +259,7 @@ class OrderService
         OrderCustomer::create([
             'order_id'    => $order->id,
             'first_name'  => $request->customer['first_name'],
-            'last_name'   => $request->customer['last_name'] ?? "XXX",
+            'last_name'   => $request->customer['last_name'] ?? "   ",
             'customer_id' => $order->customer_id ?? null,
             'email'       => $request->customer['email'] ?? null,
             'phone'       => $request->customer['phone'] ?? null,

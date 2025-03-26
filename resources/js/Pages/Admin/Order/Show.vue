@@ -175,13 +175,13 @@
                                     {{ `${order.order_customer.first_name} ` }}
                                 </td>
                             </tr>
-                            <tr>
+                            <!-- <tr>
                                 <th scope="col" class="py-2">Last name</th>
                                 <td scope="col" class="py-2 w-10">-</td>
                                 <td scope="col" class="py-2">
                                     {{ `${order.order_customer.last_name} ` }}
                                 </td>
-                            </tr>
+                            </tr> -->
                             <tr>
                                 <th scope="col" class="py-2">Email</th>
                                 <td scope="col" class="py-2 w-10">-</td>
