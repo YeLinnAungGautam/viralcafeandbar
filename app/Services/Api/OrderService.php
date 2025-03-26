@@ -324,7 +324,7 @@ class OrderService
 
             // $customer->notify(new PointTransaction($title, $body, $translates));
 
-            $tokens = $customer->fcmToken->pluck('token')->toArray();
+            // $tokens = $customer->fcmToken->pluck('token')->toArray();
 
             $notification = $customer->notifications()->latest()->value('data');
 
@@ -339,7 +339,7 @@ class OrderService
     private function _sendNotification(Order $order, $type = 'orders'): void
     {
         $customer = Customer::find($order->customer_id);
-        $tokens   = $customer->fcmToken->pluck('token')->toArray();
+        // $tokens   = $customer->fcmToken->pluck('token')->toArray();
         $order    = Order::with('payment')->findOrFail($order->id);
 
         $translates = TranslateHelper::getOrderMessage($order);
