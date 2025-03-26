@@ -55,12 +55,43 @@
                                     </span>
                                 </td>
                             </tr>
-                            <tr>
+                            <!-- <tr>
                                 <th scope="col" class="py-2">Total tax</th>
                                 <td scope="col" class="py-2 w-10">-</td>
                                 <td scope="col" class="py-2">
                                     <span
                                         v-html="currencyFormat(order.total_tax)"
+                                    ></span>
+                                </td>
+                            </tr> -->
+                            <tr>
+                                <th scope="col" class="py-2">Sub total</th>
+                                <td scope="col" class="py-2 w-10">-</td>
+                                <td scope="col" class="py-2">
+                                    <span
+                                        v-html="currencyFormat(order.subtotal)"
+                                    ></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="py-2">Total discount</th>
+                                <td scope="col" class="py-2 w-10">-</td>
+                                <td scope="col" class="py-2">
+                                    <span
+                                        v-html="
+                                            currencyFormat(order.total_discount)
+                                        "
+                                    ></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="py-2">Grand total</th>
+                                <td scope="col" class="py-2 w-10">-</td>
+                                <td scope="col" class="py-2">
+                                    <span
+                                        v-html="
+                                            currencyFormat(order.total_price)
+                                        "
                                     ></span>
                                 </td>
                             </tr>
@@ -76,12 +107,15 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="col" class="py-2">Total price</th>
+                                <th scope="col" class="py-2">Total profix</th>
                                 <td scope="col" class="py-2 w-10">-</td>
                                 <td scope="col" class="py-2">
                                     <span
                                         v-html="
-                                            currencyFormat(order.total_price)
+                                            currencyFormat(
+                                                order.total_price -
+                                                    order.total_expense
+                                            )
                                         "
                                     ></span>
                                 </td>
@@ -250,6 +284,52 @@
                             </template>
                         </Column>
                         <Column
+                            header="Unit expense"
+                            headerClass="text-end"
+                            :bodyStyle="{ textAlign: 'right' }"
+                        >
+                            <template #body="{ data }">
+                                <span
+                                    v-html="
+                                        currencyFormat(data.unit_expense, false)
+                                    "
+                                ></span>
+                            </template>
+                        </Column>
+                        <Column
+                            header="Total expense"
+                            headerClass="text-end"
+                            :bodyStyle="{ textAlign: 'right' }"
+                        >
+                            <template #body="{ data }">
+                                <span
+                                    v-html="
+                                        currencyFormat(
+                                            data.total_expense,
+                                            false
+                                        )
+                                    "
+                                ></span>
+                            </template>
+                        </Column>
+                        <Column
+                            header="Profix (Only orignal)"
+                            headerClass="text-end"
+                            :bodyStyle="{ textAlign: 'right' }"
+                        >
+                            <template #body="{ data }">
+                                +<span
+                                    v-html="
+                                        currencyFormat(
+                                            data.original_price * data.qty -
+                                                data.total_expense,
+                                            false
+                                        )
+                                    "
+                                ></span>
+                            </template>
+                        </Column>
+                        <Column
                             header="Unit price"
                             headerClass="text-end"
                             :bodyStyle="{ textAlign: 'right' }"
@@ -285,7 +365,7 @@
                             <Row>
                                 <Column
                                     footer="Subtotal:"
-                                    :colspan="3"
+                                    :colspan="6"
                                     footerStyle="text-align:right"
                                 />
                                 <Column footerStyle="text-align:right">
@@ -301,10 +381,10 @@
                                     </template>
                                 </Column>
                             </Row>
-                            <Row>
+                            <!-- <Row>
                                 <Column
                                     footer="Tax:"
-                                    :colspan="3"
+                                    :colspan="6"
                                     footerStyle="text-align:right"
                                 />
                                 <Column footerStyle="text-align:right">
@@ -319,11 +399,11 @@
                                         />
                                     </template>
                                 </Column>
-                            </Row>
+                            </Row> -->
                             <Row class="text-right" v-if="order.total_discount">
                                 <Column
-                                    footer="Total Discount:"
-                                    :colspan="3"
+                                    :footer="`Total Discount (${settings.currency}):`"
+                                    :colspan="6"
                                     footerStyle="text-align:right"
                                 />
                                 <Column footerStyle="text-align:right">
@@ -342,7 +422,7 @@
                             <Row v-if="order.membership_discount">
                                 <Column
                                     :footer="`Membership Discount (${order.membership_discount}%):`"
-                                    :colspan="3"
+                                    :colspan="6"
                                     footerStyle="text-align:right"
                                 />
                                 <Column footerStyle="text-align:right">
@@ -361,7 +441,7 @@
                             <Row>
                                 <Column
                                     :footer="`Grand Total (${settings.currency}):`"
-                                    :colspan="3"
+                                    :colspan="6"
                                     footerStyle="text-align:right"
                                 />
                                 <Column footerStyle="text-align:right">
@@ -380,7 +460,7 @@
                             <Row>
                                 <Column
                                     :footer="`Total Paid (${settings.currency}):`"
-                                    :colspan="3"
+                                    :colspan="6"
                                     footerStyle="text-align:right"
                                 />
                                 <Column footerStyle="text-align:right">
@@ -396,7 +476,7 @@
                             <Row>
                                 <Column
                                     :footer="`Total Due (${settings.currency}):`"
-                                    :colspan="3"
+                                    :colspan="6"
                                     footerStyle="text-align:right"
                                 />
                                 <Column footerStyle="text-align:right">
