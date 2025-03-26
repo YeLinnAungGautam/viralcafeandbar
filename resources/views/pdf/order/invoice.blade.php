@@ -13,13 +13,17 @@
                         {{ convertToZawgyi($order->orderCustomer->first_name) }}
                         {{ convertToZawgyi($order->orderCustomer->last_name) }}
                     </span>
-                    <span class="mb-3 block">
-                        {{ convertToZawgyi($order->orderCustomer->address) }},
-                        {{ convertToZawgyi($order->orderCustomer->country) }}
-                    </span>
-                    <span class="mb-3 block">
-                        {{ $order->orderCustomer->phone ?? '---' }}
-                    </span>
+                    @if (isset($order->orderCustomer->address) && isset($order->orderCustomer->country))
+                        <span class="mb-3 block">
+                            {{ convertToZawgyi($order->orderCustomer->address) }},
+                            {{ convertToZawgyi($order->orderCustomer->country) }}
+                        </span>
+                    @endif
+                    @if (isset($order->orderCustomer->phone))
+                        <span class="mb-3 block">
+                            {{ $order->orderCustomer->phone ?? '---' }}
+                        </span>
+                    @endif
                     <span class="mb-3 block">
                         {{ $order->orderCustomer->email ?? '---' }}
                     </span>
