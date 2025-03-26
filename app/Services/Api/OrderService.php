@@ -89,8 +89,15 @@ class OrderService
         try {
             $oldOrder = clone $order;
 
-
             $order->load('transactions', 'orderCustomer');
+
+            if ($request->order_status == 'cancel' && $order->order_status == 'cancel') {
+                throw new Exception('Order already cancel.');
+            }
+
+            if ($request->order_status == 'cancel' && $order->order_status == 'confirmed') {
+                throw new Exception('Order already confirmed.');
+            }
 
             $order->update([
                 'order_status'   => $request->input('order_status'),
@@ -156,8 +163,10 @@ class OrderService
                 }
             }
 
+            $product = Product::find($value['product_id']);
+
             $data[] = [
-                'product_name'    => Product::find($value['product_id'])->name,
+                'product_name'    => $product->name,
                 'product_id'      => $value['product_id'],
                 'sku_id'          => $value['sku_id'],
                 'sku_name'        => $sku['code'],
@@ -166,6 +175,8 @@ class OrderService
                 'total_price'     => $total_price,
                 'discount_amount' => $discount_amount * $value['qty'],
                 'tax_price'       => 0,
+                'unit_expense'    => $sku->expense,
+                'total_expense'   => $sku->expense * $value['qty'],
                 'order_id'        => $order->id,
                 'created_at'      => now(),
                 'updated_at'      => now(),
@@ -188,6 +199,7 @@ class OrderService
             'membership_discount'        => $membership_discount,
             'membership_discount_amount' => $membership_discount_amount,
             'total_price'                => $final_price,
+            'total_expense'              => collect($data)->sum('total_expense'),
         ]);
 
         OrderItem::insert($data);
@@ -247,7 +259,7 @@ class OrderService
         OrderCustomer::create([
             'order_id'    => $order->id,
             'first_name'  => $request->customer['first_name'],
-            'last_name'   => $request->customer['last_name'] ?? "XXX",
+            'last_name'   => $request->customer['last_name'] ?? "   ",
             'customer_id' => $order->customer_id ?? null,
             'email'       => $request->customer['email'] ?? null,
             'phone'       => $request->customer['phone'] ?? null,

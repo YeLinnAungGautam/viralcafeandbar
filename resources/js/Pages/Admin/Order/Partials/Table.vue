@@ -127,6 +127,17 @@
 
             <Column
                 class="text-nowrap"
+                header="Expense"
+                :showFilterMenu="false"
+                :show-clear-button="false"
+            >
+                <template #body="{ data }">
+                    <span v-html="currencyFormat(data.total_expense)" />
+                </template>
+            </Column>
+
+            <Column
+                class="text-nowrap"
                 header="Total Price"
                 field="total_price"
                 :showFilterMenu="false"
