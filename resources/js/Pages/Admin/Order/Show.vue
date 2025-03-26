@@ -2,8 +2,8 @@
     <Dashboard title="Show Order">
         <BreadcrumbDefault page-title="Order Details" />
         <div class="card flex justify-end gap-2 mb-4">
-            <!-- <template v-if="order.order_status != 'cancel'"> -->
             <Button
+                v-if="order.order_status != 'cancel'"
                 type="button"
                 @click="visibleTransaction = true"
                 size="small"
@@ -65,6 +65,17 @@
                                 </td>
                             </tr>
                             <tr>
+                                <th scope="col" class="py-2">Total expense</th>
+                                <td scope="col" class="py-2 w-10">-</td>
+                                <td scope="col" class="py-2">
+                                    <span
+                                        v-html="
+                                            currencyFormat(order.total_expense)
+                                        "
+                                    ></span>
+                                </td>
+                            </tr>
+                            <tr>
                                 <th scope="col" class="py-2">Total price</th>
                                 <td scope="col" class="py-2 w-10">-</td>
                                 <td scope="col" class="py-2">
@@ -75,6 +86,20 @@
                                     ></span>
                                 </td>
                             </tr>
+                            <!-- <tr>
+                                <th scope="col" class="py-2">Total profit</th>
+                                <td scope="col" class="py-2 w-10">-</td>
+                                <td scope="col" class="py-2">
+                                    <span
+                                        v-html="
+                                            currencyFormat(
+                                                order.total_price -
+                                                    order.total_expense
+                                            )
+                                        "
+                                    ></span>
+                                </td>
+                            </tr> -->
                             <tr>
                                 <th scope="col" class="py-2">Order status</th>
                                 <td scope="col" class="py-2 w-10">-</td>
@@ -150,13 +175,13 @@
                                     {{ `${order.order_customer.first_name} ` }}
                                 </td>
                             </tr>
-                            <tr>
+                            <!-- <tr>
                                 <th scope="col" class="py-2">Last name</th>
                                 <td scope="col" class="py-2 w-10">-</td>
                                 <td scope="col" class="py-2">
                                     {{ `${order.order_customer.last_name} ` }}
                                 </td>
-                            </tr>
+                            </tr> -->
                             <tr>
                                 <th scope="col" class="py-2">Email</th>
                                 <td scope="col" class="py-2 w-10">-</td>
@@ -164,7 +189,7 @@
                                     {{ order.order_customer.email }}
                                 </td>
                             </tr>
-                            <tr>
+                            <!-- <tr>
                                 <th scope="col" class="py-2">Phone</th>
                                 <td scope="col" class="py-2 w-10">-</td>
                                 <td scope="col" class="py-2">
@@ -190,7 +215,7 @@
                                 <td scope="col" class="py-2">
                                     {{ order.order_customer.country }}
                                 </td>
-                            </tr>
+                            </tr> -->
                         </tbody>
                     </table>
                 </div>
@@ -215,10 +240,14 @@
                             </template>
                         </Column>
 
-                        <Column header="Quantity">
+                        <Column
+                            header="Quantity"
+                            headerClass="text-end"
+                            :bodyStyle="{ textAlign: 'right' }"
+                        >
                             <template #body="{ data }">
-                                {{ data.qty }}</template
-                            >
+                                {{ data.qty }}
+                            </template>
                         </Column>
                         <Column
                             header="Unit price"
@@ -413,9 +442,9 @@
                     :orderNumber="order.order_no"
                 />
             </div>
-            <div class="col-span-full mt-5">
+            <!-- <div class="col-span-full mt-5">
                 <PointTable :items="order.point_transactions" />
-            </div>
+            </div> -->
             <Link :href="route(`admin.orders.index`)">
                 <Button label="Back To List" size="small" severity="contrast" />
             </Link>

@@ -75,6 +75,7 @@ class ProductService
                     'stock'               => $value['stock'],
                     'stock_status'        => $value['stock_status'],
                     'weight'              => $value['weight'],
+                    'expense'             => $value['expense'],
                     'original_price'      => $value['price'],
                     'discount_schedule'   => $value['discount_schedule'],
                     'sale_price'          => $value['sale_price'],
@@ -96,6 +97,10 @@ class ProductService
             $product->categories()->attach($request->category);
 
             $skus = $product->skus()->createMany($skuInsertData);
+
+            $product->update([
+                'total_expense' => $skus->sum('expense'),
+            ]);
 
             $data = [];
 
@@ -183,6 +188,10 @@ class ProductService
                 $this->updateVairation($sku[0], $product->sku);
             }
 
+            $product->update([
+                'total_expense' => collect($request->skus)->sum('expense'),
+            ]);
+
             $media = $product->images->pluck('file_name')->toArray();
 
             foreach ($request->input('upload', []) as $file) {
@@ -244,7 +253,6 @@ class ProductService
             }
 
 
-
             $product->attributes()->sync($request->attribute_id);
 
             $product->categories()->sync($request->category);
@@ -268,6 +276,7 @@ class ProductService
                 'stock'               => $request['stock'],
                 'stock_status'        => $request['stock_status'],
                 'weight'              => $request['weight'],
+                'expense'             => $request['expense'],
                 'original_price'      => $request['price'],
                 'sale_price'          => $request['sale_price'],
                 'discount_type'       => $request['sale_price'] ? 'percent' : null,

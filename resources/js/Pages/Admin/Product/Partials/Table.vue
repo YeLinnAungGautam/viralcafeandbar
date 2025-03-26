@@ -37,10 +37,13 @@
                     </Link>
                 </template>
             </Column>
-            <Column field="expense" header="Name" sortable>
-                <!-- <template #body="{ data }">
-                    {{ data.skus.expense }}
-                </template> -->
+            <Column field="total_expense" header="Expense" sortable>
+                <template #body="{ data }">
+                    <span
+                        class="text-nowrap"
+                        v-html="currencyFormat(data.total_expense)"
+                    ></span>
+                </template>
             </Column>
             <Column field="original_price" header="Price" sortable>
                 <template #body="{ data }">
