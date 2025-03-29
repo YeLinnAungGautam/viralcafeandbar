@@ -63,7 +63,7 @@
             <Column
                 :showFilterMenu="false"
                 field="order_no"
-                header="Order Code"
+                header="Order No."
                 :show-clear-button="false"
             >
                 <template #body="{ data }">
@@ -92,9 +92,9 @@
                 </template>
             </Column>
 
-            <Column
+            <!-- <Column
                 field="customer"
-                header="Order Customer"
+                header="Customer"
                 :showFilterMenu="false"
                 :show-clear-button="false"
             >
@@ -122,6 +122,23 @@
                         "
                         placeholder="Search by customer"
                     />
+                </template>
+            </Column> -->
+
+            <Column
+                field="order_date"
+                header="Order Date"
+                :showFilterMenu="false"
+                :show-clear-button="false"
+            >
+                <template #body="{ data }">
+                    <span class="text-nowrap">
+                        {{
+                            data.order_date
+                                ? moment(data.order_date).format("DD/MM/YYYY")
+                                : moment(data.created_at).format("DD/MM/YYYY")
+                        }}
+                    </span>
                 </template>
             </Column>
 

@@ -30,14 +30,14 @@ class OrderService
 
     public function __construct(public $authId = null)
     {
-        $this->authId = $authId ?? Auth::id();
+        // $this->authId = $authId ?? Auth::id();
     }
 
     public function list(Request $request)
     {
         $orders = Order::withCount(['orderItems as total_items'])
             ->latest('id')
-            ->paginate( 1);
+            ->paginate(1);
 
         return $orders;
     }
@@ -51,6 +51,7 @@ class OrderService
                 'payment_method' => $request->payment_method,
                 'internal_note'  => $request->internal_note,
                 'customer_id'    => $this->authId,
+                'order_date'     => $request->order_date,
             ]);
 
             $this->_saveOrderItems($request, $order);
@@ -150,18 +151,18 @@ class OrderService
                 $discount_amount = $sku['original_price'] - $sku['sale_price'];
             }
 
-            $customerMemberShip = CustomerMemberShip::where('customer_id', $order->customer_id)->first();
+            // $customerMemberShip = CustomerMemberShip::where('customer_id', $order->customer_id)->first();
 
-            $membership_discount = 0;
+            // $membership_discount = 0;
 
-            if ($customerMemberShip->is_percentage_default) {
-                $membership_discount = $customerMemberShip->percentage;
-            } else {
-                if (!is_null($customerMemberShip->member_ship_id)) {
-                    $member              = MemberShip::find($customerMemberShip->member_ship_id);
-                    $membership_discount = $member->percentage;
-                }
-            }
+            // if ($customerMemberShip->is_percentage_default) {
+            //     $membership_discount = $customerMemberShip->percentage;
+            // } else {
+            //     if (!is_null($customerMemberShip->member_ship_id)) {
+            //         $member              = MemberShip::find($customerMemberShip->member_ship_id);
+            //         $membership_discount = $member->percentage;
+            //     }
+            // }
 
             $product = Product::find($value['product_id']);
 
@@ -187,19 +188,22 @@ class OrderService
         $subtotal       = collect($data)->sum('total_price') + $total_discount;
         $tax            = collect($data)->sum('tax_price');
 
-        $total_price                = collect($data)->sum('total_price');
-        $membership_discount_amount = $total_price * ($membership_discount / 100);
-        $final_price                = $total_price - $membership_discount_amount;
+        $total_price = collect($data)->sum('total_price');
+
+        // $membership_discount_amount = $total_price * ($membership_discount / 100);
+        // $final_price                = $total_price - $membership_discount_amount;
+
+        $final_price = $total_price;
 
         $order->update([
-            'earn'                       => round($final_price / Setting::getValueByKey('calculate_price'), 2),
-            'subtotal'                   => $subtotal,
-            'total_tax'                  => $tax,
-            'total_discount'             => $total_discount,
-            'membership_discount'        => $membership_discount,
-            'membership_discount_amount' => $membership_discount_amount,
-            'total_price'                => $final_price,
-            'total_expense'              => collect($data)->sum('total_expense'),
+            'earn'           => round($final_price / Setting::getValueByKey('calculate_price'), 2),
+            'subtotal'       => $subtotal,
+            'total_tax'      => $tax,
+            'total_discount' => $total_discount,
+            // 'membership_discount'        => $membership_discount,
+            // 'membership_discount_amount' => $membership_discount_amount,
+            'total_price'    => $final_price,
+            'total_expense'  => collect($data)->sum('total_expense'),
         ]);
 
         OrderItem::insert($data);

@@ -271,6 +271,7 @@
                             v-model="customer"
                         />
                     </div> -->
+
                     <div class="flex gap-x-4">
                         <div class="mb-3 w-full">
                             <InputLabel for="fname" value="First Name" />
@@ -359,6 +360,15 @@
                     </div> -->
                 </Fieldset>
                 <Fieldset legend="Order">
+                    <div class="mb-4">
+                        <InputLabel value="Order date" />
+                        <VueDatePicker
+                            v-model="form.order_date"
+                            :min-date="new Date()"
+                            hourFormat="12"
+                            class="w-full"
+                        />
+                    </div>
                     <div class="mb-4">
                         <InputLabel
                             for="payment_method"
@@ -481,6 +491,7 @@ const form = useForm({
         address: "",
         country: "",
     },
+    order_date: new Date(),
     items: [],
 });
 
@@ -648,7 +659,7 @@ const handleCheckout = () => {
             toast.add({
                 severity: "error",
                 summary: "Error",
-                detail: response.error,
+                detail: response.error || "Validation Fail!",
                 life: 3000,
             });
         },

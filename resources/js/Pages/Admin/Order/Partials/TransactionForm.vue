@@ -2,14 +2,7 @@
     <form @submit.prevent="handleSubmit">
         <div class="mb-5">
             <InputLabel for="payment_date" value="Payment date" />
-            <!-- <DatePicker
-                id="payment_date"
-                class="w-full"
-                autocomplete="off"
-                v-model="form.payment_date"
-            /> -->
-            <VueDatePicker v-model="form.payment_date" :format="format">
-            </VueDatePicker>
+            <VueDatePicker v-model="form.payment_date" :format="format" />
             <InputError :message="form.errors.payment_date" />
         </div>
         <div class="mb-5">
@@ -47,8 +40,9 @@
             <InputError :message="form.errors.noted" />
         </div>
         <div class="mb-5">
-            <InputLabel for="upload" value="Upload" />
+            <InputLabel for="upload" value="Upload (Require if banking)" />
             <upload-file v-model="form.upload" :multiple="false" />
+            <InputError :message="form.errors.upload" />
         </div>
         <Button type="submit" label="Submit" size="small" severity="contrast" />
     </form>

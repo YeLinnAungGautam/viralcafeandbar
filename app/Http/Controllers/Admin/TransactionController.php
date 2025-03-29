@@ -29,7 +29,10 @@ class TransactionController extends Controller
             'amount'         => 'required|numeric|gt:0|lte:' . $calculate,
             'payment_method' => 'required|exists:payments,id',
             'order_id'       => 'required',
-            'customer_id'    => 'required',
+            'customer_id'    => 'nullable',
+            'upload'         => 'required_if:payment_method,1',
+        ], [
+            'upload.required_if' => 'The upload field is required when payment method is bank transfer.',
         ]);
 
         DB::beginTransaction();
@@ -82,7 +85,10 @@ class TransactionController extends Controller
             'amount'         => 'required|numeric|gt:0|lte:' . $calculate,
             'payment_method' => 'required|exists:payments,id',
             'order_id'       => 'required',
-            'customer_id'    => 'required',
+            'customer_id'    => 'nullable',
+            'upload'         => 'required_if:payment_method,1',
+        ], [
+            'upload.required_if' => 'The upload field is required when payment method is bank transfer.',
         ]);
 
         DB::beginTransaction();

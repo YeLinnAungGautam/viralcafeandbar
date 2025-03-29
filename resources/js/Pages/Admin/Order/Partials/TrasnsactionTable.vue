@@ -4,18 +4,6 @@
     >
         <h4 class="text-base mb-3 font-bold text-black">Transaction lists</h4>
         <DataTable :value="transactions" tableStyle="min-width: 50rem">
-            <Column header="Customer">
-                <template #body="{ data }">
-                    <Link
-                        class="action-link"
-                        :href="route('admin.customers.show', data.customer_id)"
-                    >
-                        <i class="fa-solid fa-eye"></i>
-                        {{ data.customer.first_name }}
-                        {{ data.customer.last_name }}
-                    </Link>
-                </template>
-            </Column>
             <Column header="Amount">
                 <template #body="{ data }">
                     <span v-html="currencyFormat(data.amount)"></span>
@@ -80,9 +68,10 @@
             <div>
                 <div v-if="order.upload">
                     <h4 class="font-bold">Image</h4>
-                    <img
-                        class="object-cover w-full"
+                    <Image
                         :src="order?.upload?.url"
+                        class="w-[300px] h-[300px] object-cover"
+                        :preview="order?.upload?.thumbnail ? true : false"
                     />
                 </div>
                 <table class="w-full">
@@ -91,12 +80,12 @@
                             <th class="py-1 text-start">Order number</th>
                             <td class="py-1 text-end">#{{ orderNumber }}</td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <th class="py-1 text-start">Customer</th>
                             <td class="py-1 text-end">
                                 {{ order.customer.name }}
                             </td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <th class="py-1 text-start">Amount</th>
                             <td class="py-1 text-end">
@@ -144,6 +133,7 @@ import Dialog from "primevue/dialog";
 import { useRolePermission } from "@/composables/useRolePermission";
 import TableActions from "@/Components/Layouts/TableActions.vue";
 import currencyFormat from "@/composables/useCurrencyFormat";
+import Image from "primevue/image";
 
 const { hasPermission } = useRolePermission();
 

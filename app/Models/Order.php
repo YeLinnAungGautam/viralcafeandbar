@@ -14,7 +14,7 @@ class Order extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
-    protected $fillable = ['order_no', 'total_tax', 'subtotal', 'total_price', 'total_discount', 'order_status', 'membership_discount', 'membership_discount_amount', 'payment_method', 'remark', 'customer_id', 'payment_status', 'internal_note', 'earn', 'total_expense'];
+    protected $fillable = ['order_no', 'total_tax', 'subtotal', 'total_price', 'total_discount', 'order_status', 'membership_discount', 'membership_discount_amount', 'payment_method', 'remark', 'customer_id', 'payment_status', 'internal_note', 'earn', 'total_expense', 'order_date'];
 
     protected $casts = [
         'total_tax'                  => 'float',

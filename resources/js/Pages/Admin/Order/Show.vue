@@ -55,6 +55,54 @@
                                     </span>
                                 </td>
                             </tr>
+                            <tr>
+                                <th scope="col" class="py-2">Order date</th>
+                                <td scope="col" class="py-2 w-10">-</td>
+                                <td scope="col" class="py-2">
+                                    {{
+                                        moment(order.order_date).format(
+                                            "DD/MM/YYYY"
+                                        )
+                                    }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="py-2">Order status</th>
+                                <td scope="col" class="py-2 w-10">-</td>
+                                <td scope="col" class="py-2">
+                                    <Tag
+                                        class="capitalize"
+                                        :value="order.order_status"
+                                        :severity="
+                                            getSeverityForOrder(
+                                                order.order_status
+                                            )
+                                        "
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="py-2">Payment status</th>
+                                <td scope="col" class="py-2 w-10">-</td>
+                                <td scope="col" class="py-2">
+                                    <Tag
+                                        class="capitalize"
+                                        :value="order.payment_status"
+                                        :severity="
+                                            getSeverityForPayment(
+                                                order.payment_status
+                                            )
+                                        "
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="py-2">Payment method</th>
+                                <td scope="col" class="py-2 w-10">-</td>
+                                <td scope="col" class="py-2 capitalize">
+                                    {{ order?.payment?.title }}
+                                </td>
+                            </tr>
                             <!-- <tr>
                                 <th scope="col" class="py-2">Total tax</th>
                                 <td scope="col" class="py-2 w-10">-</td>
@@ -134,43 +182,7 @@
                                     ></span>
                                 </td>
                             </tr> -->
-                            <tr>
-                                <th scope="col" class="py-2">Order status</th>
-                                <td scope="col" class="py-2 w-10">-</td>
-                                <td scope="col" class="py-2">
-                                    <Tag
-                                        class="capitalize"
-                                        :value="order.order_status"
-                                        :severity="
-                                            getSeverityForOrder(
-                                                order.order_status
-                                            )
-                                        "
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="col" class="py-2">Payment status</th>
-                                <td scope="col" class="py-2 w-10">-</td>
-                                <td scope="col" class="py-2">
-                                    <Tag
-                                        class="capitalize"
-                                        :value="order.payment_status"
-                                        :severity="
-                                            getSeverityForPayment(
-                                                order.payment_status
-                                            )
-                                        "
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="col" class="py-2">Payment method</th>
-                                <td scope="col" class="py-2 w-10">-</td>
-                                <td scope="col" class="py-2 capitalize">
-                                    {{ order?.payment?.title }}
-                                </td>
-                            </tr>
+
                             <tr>
                                 <th scope="col" class="py-2">Created on</th>
                                 <td scope="col" class="py-2 w-10">-</td>
@@ -252,6 +264,16 @@
                             </tr> -->
                         </tbody>
                     </table>
+                </div>
+                <div
+                    class="w-full block px-4 p-5 bg-white border border-slate-200 rounded-lg shadow mb-4"
+                >
+                    <h3 class="text-base mb-3 text-black font-bold">
+                        Internal notes
+                    </h3>
+                    <p>
+                        {{ order.internal_note ?? "---" }}
+                    </p>
                 </div>
             </div>
             <div class="col-span-full mt-5">
@@ -498,24 +520,6 @@
                 </div>
             </div>
             <div class="col-span-full mt-5">
-                <div
-                    class="w-full block px-4 p-5 bg-white border border-slate-200 rounded-lg shadow mb-4"
-                >
-                    <div class="mb-5">
-                        <h3 class="text-base font-bold">Internal notes</h3>
-                        <p>
-                            {{ order.internal_note ?? "---" }}
-                        </p>
-                    </div>
-                    <div>
-                        <h3 class="text-base font-bold">Customer notes</h3>
-                        <p>
-                            {{ order.remark ?? "-" }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-span-full mt-5">
                 <TrasnsactionTable
                     @edit="handleTransactionEdit"
                     :transactions="order.transactions"
@@ -529,7 +533,6 @@
                 <Button label="Back To List" size="small" severity="contrast" />
             </Link>
         </div>
-
         <Dialog
             v-model:visible="visibleTransaction"
             modal
