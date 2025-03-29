@@ -124,6 +124,6 @@ class OrderQuery
     }
     public function paginate($perPage = 10)
     {
-        return $this->query->paginate($perPage);
+        return $this->query->paginate($perPage)->withQueryString();
     }
 }

@@ -37,7 +37,7 @@ class OrderService
     {
         $orders = Order::withCount(['orderItems as total_items'])
             ->latest('id')
-            ->paginate($request->limit ?? 1);
+            ->paginate( 1);
 
         return $orders;
     }
