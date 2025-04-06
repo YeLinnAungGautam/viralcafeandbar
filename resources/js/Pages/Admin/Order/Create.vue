@@ -364,7 +364,9 @@
                         <InputLabel value="Order date" />
                         <VueDatePicker
                             v-model="form.order_date"
-                            :min-date="new Date()"
+                            :min-date="
+                                new Date(Date.now() - 14 * 24 * 60 * 60 * 1000)
+                            "
                             hourFormat="12"
                             class="w-full"
                         />
